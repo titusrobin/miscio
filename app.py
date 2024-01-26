@@ -1,20 +1,20 @@
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 import openai
 import time
 import logging
 import streamlit as st
 
 # Load environment variables and initialize the OpenAI client
-#load_dotenv()
-openai.api_key = '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'
+load_dotenv()
+client = openai.OpenAI()
 
 # Specify the model to use
 model = "gpt-3.5-turbo-1106"  
 
 # Step 1. Upload the feedback document to OpenAI
 feedback_file_path = "/Users/robintitus/Desktop/NPL/Miscio/miscio/feedback_rag/Launchpad Feedback Sample.pdf" 
-feedback_file_object = openai.files.create(file=open(feedback_file_path, "rb"), purpose="assistants")
+feedback_file_object = client.files.create(file=open(feedback_file_path, "rb"), purpose="assistants")
 
 # Step 2 - Create an assistant with instructions for processing feedback
 # assistant = client.beta.assistants.create(
@@ -44,12 +44,12 @@ assis_id = "asst_vopEA8SnLWp9WGtfdYqVwPQD"
 feedback_message = "Please analyze the attached feedback document and provide tags and sentiments."
 
 # Send the message to the assistant
-message = openai.beta.threads.messages.create(
+message = client.beta.threads.messages.create(
     thread_id=thread_id, role="user", content=feedback_message
 )
 
 # Run the Assistant
-run = openai.beta.threads.runs.create(
+run = client.beta.threads.runs.create(
     thread_id=thread_id,
     assistant_id=assis_id,
     instructions="Identify themes and sentiments from the feedback document."
@@ -86,8 +86,8 @@ def wait_for_run_completion(client, thread_id, run_id, sleep_interval=5):
         time.sleep(sleep_interval)
 
 # Run the wait_for_run_completion function
-wait_for_run_completion(client=openai, thread_id=thread_id, run_id=run.id)
+wait_for_run_completion(client=client, thread_id=thread_id, run_id=run.id)
 
 # Check the Run Steps - LOGS (remains the same as your original code)
-run_steps = openai.beta.threads.runs.steps.list(thread_id=thread_id, run_id=run.id)
+run_steps = client.beta.threads.runs.steps.list(thread_id=thread_id, run_id=run.id)
 print(f"Run Steps --> {run_steps.data[0]}")
