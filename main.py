@@ -6,12 +6,13 @@ import streamlit as st
 
 # Load environment variables and initialize the OpenAI client
 load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
+thread_id = os.getenv('THREAD_ID')
+assis_id = os.getenv('ASSISTANT_ID')
 client = openai.OpenAI()
 
 # Assume the model and ids are already set up and hardcoded from previous operations
 model = "gpt-3.5-turbo-1106"
-thread_id = "thread_hAcAVAS7i6W4NRNrnFLkH7H8"
-assis_id = "asst_vopEA8SnLWp9WGtfdYqVwPQD"
 
 # Initialize the session state variables
 if "file_id_list" not in st.session_state:

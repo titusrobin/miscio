@@ -7,13 +7,16 @@ import streamlit as st
 
 # Load environment variables and initialize the OpenAI client
 load_dotenv()
+openai.api_key = os.getenv('OPENAI_API_KEY')
+thread_id = os.getenv('THREAD_ID')
+assis_id = os.getenv('ASSISTANT_ID')
 client = openai.OpenAI()
 
 # Specify the model to use
 model = "gpt-3.5-turbo-1106"  
 
 # Step 1. Upload the feedback document to OpenAI
-feedback_file_path = "/Users/robintitus/Desktop/NPL/Miscio/miscio/feedback_rag/Launchpad Feedback Sample.pdf" 
+feedback_file_path = "/Users/robintitus/Desktop/NPL/Miscio_bot/miscio/Miscio Feedback Sample.pdf" 
 feedback_file_object = client.files.create(file=open(feedback_file_path, "rb"), purpose="assistants")
 
 # Step 2 - Create an assistant with instructions for processing feedback
@@ -37,8 +40,6 @@ feedback_file_object = client.files.create(file=open(feedback_file_path, "rb"), 
 # print(f"Thread ID: {thread_id}")
 
 #Hardcoded
-thread_id = "thread_hAcAVAS7i6W4NRNrnFLkH7H8"
-assis_id = "asst_vopEA8SnLWp9WGtfdYqVwPQD"
 
 # Construct a message with the feedback content or a request to analyze the document
 feedback_message = "Please analyze the attached feedback document and provide tags and sentiments."
