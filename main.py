@@ -9,7 +9,7 @@ load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 thread_id = os.getenv('THREAD_ID')
 assis_id = os.getenv('ASSISTANT_ID')
-client = openai.OpenAI()
+#client = openai.OpenAI()
 
 # Assume the model and ids are already set up and hardcoded from previous operations
 model = "gpt-3.5-turbo-1106"
@@ -32,7 +32,7 @@ st.set_page_config(page_title="miscio_agent1", page_icon=":memo:")
 # Function to upload a document to OpenAI and return the file ID
 def upload_to_openai(filepath):
     with open(filepath, "rb") as file:
-        response = client.files.create(file=file, purpose="assistants")
+        response = openai.files.create(file=file, purpose="assistants")
     return response.id
 
 # Sidebar for file upload
@@ -52,7 +52,7 @@ if st.session_state.file_id_list:
     for file_id in st.session_state.file_id_list:
         st.sidebar.write(file_id)
         # Associate each file id with the current assistant
-        assistant_file = client.beta.assistants.files.create(
+        assistant_file = openai.beta.assistants.files.create(
             assistant_id=assis_id, file_id=file_id
         )
 
@@ -61,7 +61,7 @@ if st.sidebar.button("Start Chatting..."):
     if st.session_state.file_id_list:
         st.session_state.start_chat = True
         if st.session_state.thread_id is None:
-            chat_thread = client.beta.threads.create()
+            chat_thread = openai.beta.threads.create()
             st.session_state.thread_id = chat_thread.id
         st.write("Thread ID:", st.session_state.thread_id)
     else:
@@ -85,12 +85,12 @@ if st.session_state.start_chat:
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
 
-        client.beta.threads.messages.create(
+        openai.beta.threads.messages.create(
             thread_id=st.session_state.thread_id, role="user", content=user_input
         )
 
         # Send the message to the assistant and wait for the response
-        run = client.beta.threads.runs.create(
+        run = openai.beta.threads.runs.create(
             thread_id=st.session_state.thread_id,
             assistant_id=assis_id,
             instructions="""You are an assistant that analyzes feedback documents.
@@ -101,11 +101,11 @@ if st.session_state.start_chat:
         with st.spinner("Generating response..."):
             while run.status != "completed":
                 time.sleep(1)
-                run = client.beta.threads.runs.retrieve(
+                run = openai.beta.threads.runs.retrieve(
                  thread_id=st.session_state.thread_id, run_id=run.id  
                 )
 
-            messages = client.beta.threads.messages.list(
+            messages = openai.beta.threads.messages.list(
                 thread_id=st.session_state.thread_id
             )
 
