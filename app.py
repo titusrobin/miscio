@@ -7,7 +7,7 @@ import streamlit as st
 
 # Load environment variables and initialize the OpenAI client
 load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = st.secrets["openai_api_key"]
 thread_id = os.getenv('THREAD_ID')
 assis_id = os.getenv('ASSISTANT_ID')
 #client = openai.OpenAI()

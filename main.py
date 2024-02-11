@@ -7,7 +7,7 @@ import streamlit as st
 
 # Environment variables and initialization
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = st.secrets["openai_api_key"]
 thread_id = os.getenv("THREAD_ID")
 assis_id = os.getenv("ASSISTANT_ID")
 model = "gpt-3.5-turbo-1106"
