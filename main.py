@@ -7,7 +7,7 @@ import streamlit as st
 
 # Environment variables and initialization
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = st.secrets["openai_api_key"]
 thread_id = os.getenv("THREAD_ID")
 assis_id = os.getenv("ASSISTANT_ID")
 model = "gpt-3.5-turbo-1106"
@@ -37,7 +37,7 @@ def upload_to_openai(filepath):
 
 # Function: initiate assistant run and display response
 def initiate_assistant_run(file_id):
-    st.session_state.thread_id = openai.beta.threads.create().id
+    st.session_istate.thread_id = openai.beta.threads.create().id
     openai.beta.assistants.files.create(assistant_id=assis_id, file_id=file_id)
     
     # Start the assistant run
